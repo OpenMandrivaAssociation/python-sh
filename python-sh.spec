@@ -31,5 +31,5 @@ sh is *not* a collection of system commands implemented in Python.
 
 %files
 %{python_sitelib}/sh.py
-%{python_sitelib}/__pycache__/*
+# %{python_sitelib}/__pycache__/*
 %{python_sitelib}/*.egg-info

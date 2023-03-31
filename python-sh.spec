@@ -1,7 +1,7 @@
 Summary:	Subprocess replacement for python
 Name:		python-sh
 Version:	1.14.2
-Release:	1
+Release:	2
 Source0:	https://files.pythonhosted.org/packages/80/39/ed280d183c322453e276a518605b2435f682342f2c3bcf63228404d36375/sh-1.14.2.tar.gz
 License:	BSD
 Group:		Development/Python

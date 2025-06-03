@@ -1,15 +1,24 @@
-Summary:	Subprocess replacement for python
+%define module sh
+%bcond_without tests
+
 Name:		python-sh
-Version:	1.14.2
-Release:	2
-Source0:	https://files.pythonhosted.org/packages/80/39/ed280d183c322453e276a518605b2435f682342f2c3bcf63228404d36375/sh-1.14.2.tar.gz
-License:	BSD
+Version:	2.2.2
+Release:	1
+License:	MIT
+Summary:	Subprocess replacement for python
 Group:		Development/Python
-Url:		https://pypi.org/project/sh/
+URL:		https://pypi.org/project/sh/
+Source0:	https://github.com/amoffat/sh/archive/%{version}/%{module}-%{version}.tar.gz
 BuildArch:	noarch
-BuildRequires:	python-distribute
-BuildRequires:	python-setuptools
-BuildRequires:	python-pkg-resources
+
+BuildRequires:	pkgconfig(python)
+BuildRequires:	python%{pyver}dist(pip)
+BuildRequires:	python%{pyver}dist(poetry-core)
+BuildRequires:	python%{pyver}dist(setuptools)
+BuildRequires:	python%{pyver}dist(wheel)
+%if %{with tests}
+BuildRequires:	python%{pyver}dist(pytest)
+%endif
 
 %description
 sh is a full-fledged subprocess replacement for Python 2.6 - 3.6, PyPy and PyPy3
@@ -23,13 +32,37 @@ print ifconfig("eth0")
 sh is *not* a collection of system commands implemented in Python.
 
 %prep
-%autosetup -p1 -n sh-%{version}
-%{__python} setup.py build
+%autosetup -n %{module}-%{version} -p1
+
+# Remove git badge remote images from README
+sed -i '1,3d;7,22d;' README.rst
+
+%build
+%py_build
 
 %install
-%{__python} setup.py install --root=%{buildroot}
+%py_install
+
+%if %{with tests}
+%check
+export CI=true
+export PYTHONPATH="%{buildroot}%{python_sitelib}:%{buildroot}%{python_sitelib}:${PWD}"
+
+# These tests error on the abf but pass in local builds.
+skiptests="test_environment"
+skiptests+=" or test_fd_over_1024"
+
+# For the following env globals usage see:
+# https://github.com/amoffat/sh/blob/ea434f0bafd285bbe5b93d218e62227f2b77f310/sh.py#L88-L95
+export SH_TESTS_RUNNING=1
+# Run tests with both poll and select.
+SH_TESTS_USE_SELECT=0 %{__python} -m pytest -v -k "not ($skiptests)"
+SH_TESTS_USE_SELECT=1 %{__python} -m pytest -v -k "not ($skiptests)"
+%endif
 
 %files
 %{python_sitelib}/sh.py
-# %{python_sitelib}/__pycache__/*
-%{python_sitelib}/*.egg-info
+%{python_sitelib}/__pycache__/sh.*pyc
+%{python_sitelib}/%{module}-%{version}.dist-info
+%doc README.rst
+%license LICENSE.txt

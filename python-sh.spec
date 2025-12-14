@@ -3,7 +3,7 @@
 
 Name:		python-sh
 Version:	2.2.2
-Release:	1
+Release:	2
 License:	MIT
 Summary:	Subprocess replacement for python
 Group:		Development/Python

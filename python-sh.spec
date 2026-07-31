@@ -2,8 +2,8 @@
 %bcond_without tests
 
 Name:		python-sh
-Version:	2.2.2
-Release:	2
+Version:	2.4.0
+Release:	1
 License:	MIT
 Summary:	Subprocess replacement for python
 Group:		Development/Python
@@ -32,7 +32,7 @@ print ifconfig("eth0")
 sh is *not* a collection of system commands implemented in Python.
 
 %prep
-%autosetup -n %{module}-%{version} -p1
+%autosetup -n sh-2.4.0 -p1
 
 # Remove git badge remote images from README
 sed -i '1,3d;7,22d;' README.rst

@@ -11,10 +11,9 @@ URL:		https://pypi.org/project/sh/
 Source0:	https://github.com/amoffat/sh/archive/%{version}/%{module}-%{version}.tar.gz
 BuildArch:	noarch
 
-BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python3)
 BuildRequires:	python%{pyver}dist(pip)
-BuildRequires:	python%{pyver}dist(poetry-core)
-BuildRequires:	python%{pyver}dist(setuptools)
+BuildRequires:	python%{pyver}dist(hatchling)
 BuildRequires:	python%{pyver}dist(wheel)
 %if %{with tests}
 BuildRequires:	python%{pyver}dist(pytest)
@@ -61,8 +60,7 @@ SH_TESTS_USE_SELECT=1 %{__python} -m pytest -v -k "not ($skiptests)"
 %endif
 
 %files
-%{python_sitelib}/sh.py
-%{python_sitelib}/__pycache__/sh.*pyc
+%{python_sitelib}/sh/
 %{python_sitelib}/%{module}-%{version}.dist-info
 %doc README.rst
 %license LICENSE.txt
